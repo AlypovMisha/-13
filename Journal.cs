@@ -24,7 +24,7 @@ namespace Лабораторная_13
 
     public class Journal
     {
-        private List<JournalEntry> entries = new List<JournalEntry>();
+        public List<JournalEntry> entries = new List<JournalEntry>();
 
         public void AddEntry(object source, CollectionHandlerEventArgs args)
         {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Лабораторная_13
@@ -64,6 +63,28 @@ namespace Лабораторная_13
             }
             throw new IndexOutOfRangeException();
         }
+
+        public T this[T key]
+        {
+            get
+            {
+                var node = SearchItem(key);
+                if (node == null) throw new KeyNotFoundException("Элемент с таким ключом не найден.");
+                return node.Data;
+            }
+            set
+            {
+                var node = SearchItem(key);
+                if (node != null)
+                {
+                    base.Remove(node.Data);
+                }
+                base.Add(value);
+                OnCollectionReferenceChanged(new CollectionHandlerEventArgs("Заменен элемент", value, CollectionName));
+            }
+        }
     }
 }
+
+
 
