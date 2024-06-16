@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Лабораторная_13
@@ -18,7 +18,7 @@ namespace Лабораторная_13
 
         public override string ToString()
         {
-            return $"{CollectionName} - тип изменения: {ChangeType}, измененный элемент: {ChangedItem}";
+            return $"Название коллекции: {CollectionName}. Тип изменения: {ChangeType}.  Элемент: {ChangedItem}";
         }
     }
 
@@ -33,10 +33,14 @@ namespace Лабораторная_13
 
         public void PrintJournal()
         {
-            foreach (var entry in entries)
+            if (entries.Count > 0)
             {
-                Console.WriteLine(entry);
+                foreach (var entry in entries)
+                {
+                    Console.WriteLine(entry);
+                }
             }
+            else { Console.WriteLine("В журнале нет записей"); }
         }
     }
 }
