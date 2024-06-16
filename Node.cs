@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using _10LabDll;
+using System;
 
-namespace Лабораторная_13
+namespace _12LabLibrary
 {
     public class Node<T> where T : IInit, ICloneable, new()
     {
@@ -21,7 +18,7 @@ namespace Лабораторная_13
 
         public Node(T data)
         {
-            Data = data;
+            Data = (T)data.Clone();
             Next = null;
             Prev = null;
         }

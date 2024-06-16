@@ -1,13 +1,7 @@
 ﻿using System;
 
-namespace Лабораторная_13
+namespace _10LabDll
 {
-    public interface IInit
-    {
-        void Init();
-        void RandomInit();
-        void Show();
-    }
 
     public class Cars : IInit, IComparable, ICloneable
     {

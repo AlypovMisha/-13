@@ -1,7 +1,8 @@
-﻿using System;
+﻿using _10LabDll;
+using System;
 using System.Collections.Generic;
 
-namespace Лабораторная_13
+namespace _12LabLibrary
 {
     public class HashTable<T> where T : IInit, ICloneable, new()
     {
