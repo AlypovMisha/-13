@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Лабораторная_13
 {
@@ -14,11 +14,7 @@ namespace Лабораторная_13
             ChangedItem = changedItem;
             CollectionName = collectionName;
         }
-
-        public override string ToString()
-        {
-            return $"{CollectionName} - Тип изменения: {ChangeType}, Измененный элемент: {ChangedItem}";
-        }
     }
 }
+
 
