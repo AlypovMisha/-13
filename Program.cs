@@ -1,88 +1,30 @@
-﻿using System;
-
+using _10LabDll;
+using System;
+using System.Collections.ObjectModel;
 namespace Лабораторная_13
 {
     class Program
     {
         static void Main(string[] args)
         {
-            MyObservableCollection<Cars> collection1 = new MyObservableCollection<Cars>("Коллекция 1");
-            MyObservableCollection<Cars> collection2 = new MyObservableCollection<Cars>("Коллекция 2");
-
-            Journal journal1 = new Journal();
-            Journal journal2 = new Journal();
-
-            collection1.CollectionCountChanged += journal1.AddEntry;
-            collection1.CollectionReferenceChanged += journal1.AddEntry;
-
-            collection2.CollectionCountChanged += journal2.AddEntry;
-            collection2.CollectionReferenceChanged += journal2.AddEntry;
-
-            while (true)
-            {
-                try
-                {
-                    PrintMenuForObservableCollection();
-                    int choice = int.Parse(Console.ReadLine());
-                    if (choice == 0) break;
-
-                    switch (choice)
-                    {
-                        case 1:
-                            AddCarToCollection(collection1);
-                            break;
-                        case 2:
-                            RemoveCarFromCollection(collection1);
-                            break;
-                        case 3:
-                            ReplaceCarInCollection(collection1);
-                            break;
-                        case 4:
-                            PrintCollection(collection1);
-                            break;
-                        case 5:
-                            PrintJournal(journal1);
-                            break;
-                        case 6:
-                            AddCarToCollection(collection2);
-                            break;
-                        case 7:
-                            RemoveCarFromCollection(collection2);
-                            break;
-                        case 8:
-                            ReplaceCarInCollection(collection2);
-                            break;
-                        case 9:
-                            PrintCollection(collection2);
-                            break;
-                        case 10:
-                            PrintJournal(journal2);
-                            break;
-                        default:
-                            Console.WriteLine("Неверный выбор. Попробуйте еще раз.");
-                            break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Ошибка: {ex.Message}");
-                }
-            }
+            PrintMenuForObservableCollection();
+            ChoiceForObservableCollection();
         }
         public static void PrintMenuForObservableCollection()
         {
             Console.WriteLine("\n\t\t||| Меню |||\n");
             Console.WriteLine("" +
-                "1. Добавить элемент в коллекцию\n" +
-                "2. Удалить элемент из коллекции\n" +
-                "3. Заменить элемент в коллекции\n" +
-                "4. Показать элементы коллекции\n" +
-                "5. Показать журнал изменений коллекции\n" +
-                "6. Добавить элемент в другую коллекцию\n" +
-                "7. Удалить элемент из другой коллекции\n" +
-                "8. Заменить элемент в другой коллекции\n" +
-                "9. Показать элементы другой коллекции\n" +
-                "10. Показать журнал изменений другой коллекции\n" +
+                "1. Добавить элемент в первую коллекцию \n" +
+                "2. Удалить элемент из первой коллекции\n" +
+                "3. Заменить элемент в первой коллекции\n" +
+                "4. Показать элементы первой коллекции\n" +
+                "5. Показать журнал №1\n" +
+                "6. Добавить элемент во вторую коллекцию\n" +
+                "7. Удалить элемент из второй коллекции\n" +
+                "8. Заменить элемент во второй коллекции\n" +
+                "9. Показать элементы второй коллекции\n" +
+                "10. Показать журнал №2\n" +
+                "11. Вывести меню\n" + 
                 "0. Выйти");
         }
 
@@ -107,29 +49,38 @@ namespace Лабораторная_13
                             {
                                 Console.Write("Введите название коллекции: ");
                                 string name = Console.ReadLine();
-                                collection1 = new MyObservableCollection<Cars>(name);
+                                collection1 = new MyObservableCollection<Cars>(name, 10);
+                                collection1.CollectionCountChanged += journal1.AddEntry;
+                                collection1.CollectionReferenceChanged += journal1.AddEntry;
+                                collection1.CollectionReferenceChanged += journal2.AddEntry;
                             }
+                            Console.WriteLine("Введите элемент, который хотите добавить");
+                            int count = collection1.Count;
                             Cars car = new Cars();
                             car.Init();
                             collection1.Add(car);
-                            Console.WriteLine("Элемент добавлен в коллекцию 1.");
+                            if (count < collection1.Count)
+                                Console.WriteLine("Машина добавлена.");
+                            else
+                                Console.WriteLine("Машина не добавлена");
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine($"Ошибка: {ex.Message}");
                         }
                         break;
-
                     case "2":
                         try
                         {
                             if (collection1 != null && collection1.Count > 0)
                             {
-                                Console.Write("Введите индекс элемента для удаления из коллекции 1: ");
-                                int index = int.Parse(Console.ReadLine());
-                                Cars car = collection1[index];
-                                collection1.Remove(car);
-                                Console.WriteLine("Элемент удален из коллекции 1.");
+                                Console.Write("Элемент который хотите удалить: ");                                
+                                Cars car = new Cars();
+                                car.Init();
+                                if(collection1.Remove(car))
+                                    Console.WriteLine("Элемент удален из коллекции 1.");
+                                else
+                                    Console.WriteLine("Элемент не найден");
                             }
                             else
                             {
@@ -147,12 +98,13 @@ namespace Лабораторная_13
                         {
                             if (collection1 != null && collection1.Count > 0)
                             {
-                                Console.Write("Введите индекс элемента для замены в коллекции 1: ");
-                                int index = int.Parse(Console.ReadLine());
-                                Cars car = new Cars();
-                                car.Init();
-                                collection1[index] = car;
-                                Console.WriteLine("Элемент заменен в коллекции 1.");
+                                Console.WriteLine("Введите элемент, который хотите заменить");
+                                Cars oldCar = new Cars();
+                                oldCar.Init();
+                                Console.WriteLine("Введите элемент, на который хотите заменить");
+                                Cars newCar = new Cars();
+                                newCar.Init();
+                                collection1[oldCar] = newCar;                                
                             }
                             else
                             {
@@ -161,7 +113,7 @@ namespace Лабораторная_13
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Ошибка: {ex.Message}");
+                            Console.WriteLine($"{ex.Message}");
                         }
                         break;
 
@@ -169,10 +121,7 @@ namespace Лабораторная_13
                         if (collection1 != null)
                         {
                             Console.WriteLine("\nЭлементы коллекции 1:");
-                            foreach (var car in collection1)
-                            {
-                                Console.WriteLine(car);
-                            }
+                            collection1.PrintTable();
                         }
                         else
                         {
@@ -183,12 +132,12 @@ namespace Лабораторная_13
                     case "5":
                         if (journal1.entries.Count > 0)
                         {
-                            Console.WriteLine("\nЖурнал изменений коллекции 1:");
+                            Console.WriteLine("\nЖурнал №1:");
                             journal1.PrintJournal();
                         }
                         else
                         {
-                            Console.WriteLine("Журнал изменений коллекции 1 пуст.");
+                            Console.WriteLine("Журнал №1 пуст.");
                         }
                         break;
 
@@ -199,20 +148,17 @@ namespace Лабораторная_13
                             {
                                 Console.Write("Введите название коллекции: ");
                                 string name = Console.ReadLine();
-                                collection2 = new MyObservableCollection<Cars>(name);
+                                collection2 = new MyObservableCollection<Cars>(name, 10);    
+                                collection2.CollectionReferenceChanged += journal2.AddEntry;
                             }
-                            Console.Write("Введите индекс элемента для добавления в коллекцию 2: ");
-                            int index = int.Parse(Console.ReadLine());
-                            if (index >= 0 && index < collection1.Count)
-                            {
-                                Cars car = collection1[index];
-                                collection2.Add(car);
-                                Console.WriteLine("Элемент добавлен в коллекцию 2.");
-                            }
+                            int count = collection2.Count;
+                            Cars car = new Cars();
+                            car.Init();
+                            collection2.Add(car);
+                            if (count < collection2.Count)
+                                Console.WriteLine("Машина добавлена.");
                             else
-                            {
-                                Console.WriteLine("Неверный индекс элемента в коллекции 1.");
-                            }
+                                Console.WriteLine("Машина не добавлена");
                         }
                         catch (Exception ex)
                         {
@@ -225,11 +171,13 @@ namespace Лабораторная_13
                         {
                             if (collection2 != null && collection2.Count > 0)
                             {
-                                Console.Write("Введите индекс элемента для удаления из коллекции 2: ");
-                                int index = int.Parse(Console.ReadLine());
-                                Cars car = collection2[index];
-                                collection2.Remove(car);
-                                Console.WriteLine("Элемент удален из коллекции 2.");
+                                Console.Write("Элемент который хотите удалить: ");
+                                Cars car = new Cars();
+                                car.Init();
+                                if (collection2.Remove(car))
+                                    Console.WriteLine("Элемент удален из коллекции 2.");
+                                else
+                                    Console.WriteLine("Элемент не найден");
                             }
                             else
                             {
@@ -241,18 +189,19 @@ namespace Лабораторная_13
                             Console.WriteLine($"Ошибка: {ex.Message}");
                         }
                         break;
-
                     case "8":
                         try
                         {
                             if (collection2 != null && collection2.Count > 0)
                             {
-                                Console.Write("Введите индекс элемента для замены в коллекции 2: ");
-                                int index = int.Parse(Console.ReadLine());
-                                Cars car = new Cars();
-                                car.Init();
-                                collection2[index] = car;
-                                Console.WriteLine("Элемент заменен в коллекции 2.");
+                                Console.WriteLine("Введите элемент, который хотите заменить");
+                                Cars oldCar = new Cars();
+                                oldCar.Init();
+                                Console.WriteLine("Введите элемент, на который хотите заменить");
+                                Cars newCar = new Cars();
+                                newCar.Init();
+                                collection2[oldCar] = newCar;
+
                             }
                             else
                             {
@@ -261,18 +210,14 @@ namespace Лабораторная_13
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Ошибка: {ex.Message}");
+                            Console.WriteLine($"{ex.Message}");
                         }
                         break;
-
                     case "9":
                         if (collection2 != null)
                         {
                             Console.WriteLine("\nЭлементы коллекции 2:");
-                            foreach (var car in collection2)
-                            {
-                                Console.WriteLine(car);
-                            }
+                            collection2.PrintTable();
                         }
                         else
                         {
@@ -283,61 +228,27 @@ namespace Лабораторная_13
                     case "10":
                         if (journal2.entries.Count > 0)
                         {
-                            Console.WriteLine("\nЖурнал изменений коллекции 2:");
+                            Console.WriteLine("\nЖурнал №2:");
                             journal2.PrintJournal();
                         }
                         else
                         {
-                            Console.WriteLine("Журнал изменений коллекции 2 пуст.");
+                            Console.WriteLine("Журнал №2 пуст.");
                         }
                         break;
+                    case "11":
+                        PrintMenuForObservableCollection();
+                       break;
+                    case "0":
+                        break;
+                    default:
+                        {
+                            Console.WriteLine("Вы ввели неправильное значение введите ещё раз");
+                            break;
+                        }
                 }
             }
         }
-                            
-      
-
-        static void AddCarToCollection(MyObservableCollection<Cars> collection)
-        {
-            Cars car = new Cars();
-            car.Init();
-            collection.Add(car);
-            Console.WriteLine("Машина добавлена.");
-        }
-
-        static void RemoveCarFromCollection(MyObservableCollection<Cars> collection)
-        {
-            Console.Write("Введите индекс машины для удаления: ");
-            int index = int.Parse(Console.ReadLine());
-            Cars car = collection[index];
-            collection.Remove(car);
-            Console.WriteLine("Машина удалена.");
-        }
-
-        static void ReplaceCarInCollection(MyObservableCollection<Cars> collection)
-        {
-            Console.Write("Введите индекс машины для замены: ");
-            int index = int.Parse(Console.ReadLine());
-            Cars car = new Cars();
-            car.Init();
-            collection[index] = car;
-            Console.WriteLine("Машина заменена.");
-        }
-
-        static void PrintCollection(MyObservableCollection<Cars> collection)
-        {
-            foreach (var car in collection)
-            {
-                Console.WriteLine(car);
-            }
-        }
-
-        static void PrintJournal(Journal journal)
-        {
-            journal.PrintJournal();
-        }
-
     }
 }
-
 
